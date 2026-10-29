@@ -17,10 +17,13 @@ export default function App() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Use the environment variable for the API URL
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
   const fetchBookings = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/admin/bookings');
+      const response = await fetch(`${API_URL}/api/admin/bookings`);
       const data = await response.json();
       // Sort by date/time
       setBookings(data.sort((a: any, b: any) => new Date(a.start_at).getTime() - new Date(b.start_at).getTime()));
@@ -37,7 +40,7 @@ export default function App() {
 
   const updateStatus = async (id: string, newStatus: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/bookings/${id}/status`, {
+      const response = await fetch(`${API_URL}/api/admin/bookings/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -91,7 +94,7 @@ export default function App() {
                 const date = new Date(b.start_at);
                 return (
                   <tr key={b.id} className="hover:bg-gray-50 transition-colors">
-                                      <td className="p-4">
+                    <td className="p-4">
                       <div className="font-semibold text-gray-900">
                         {new Intl.DateTimeFormat('en-US', { 
                           hour: 'numeric', 
